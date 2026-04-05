@@ -1,14 +1,23 @@
 const express = require("express");
 const router = express.Router();
+
 const auth = require("../middleware/auth");
 const roleCheck = require("../middleware/roleCheck");
 
-// Only admin can access
-router.get("/", auth, roleCheck("admin"), (req, res) => {
-  res.json({
-    message: "Admin access granted",
-    user: req.user
-  });
-});
+
+const {
+  getUsers,
+  updateRole,
+  updateStatus
+} = require("../controllers/userController");
+
+// Only admin can manage users
+router.get("/", auth, roleCheck("admin"), getUsers);
+
+router.patch("/:id/role", auth, roleCheck("admin"), updateRole);
+
+router.patch("/:id/status", auth, roleCheck("admin"), updateStatus);
+
+
 
 module.exports = router;
