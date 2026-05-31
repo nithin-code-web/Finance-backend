@@ -1,15 +1,39 @@
 # Finance Data Processing Backend
 
+## 🌐 Live Demo
+
+**API Base URL:** https://finance-backend-zct1.onrender.com/
+
+> ⚠️ Hosted on Render free tier — first request may take ~30 seconds to wake the server.
+>
+> To explore the API: use `POST /api/auth/register` to create an account, then include the returned JWT in the `Authorization: Bearer <token>` header for all protected routes.
+
+## 📖 API Documentation
+
+Full API documentation with request/response examples is available on Postman:
+
+**[View Postman Docs →](https://documenter.getpostman.com/view/51487643/2sBXiqEUUf)**
+
+---
+
 ## 📌 Overview
 
-A backend system for managing financial transactions with role-based access control and dashboard analytics.
+A backend system for managing financial transactions with role-based access control and dashboard analytics. Built with Node.js, Express.js, and MongoDB — deployed on Render.
+
+---
 
 ## 🚀 Tech Stack
 
-* Node.js
-* Express.js
-* MongoDB
-* JWT Authentication
+| Layer          | Technology                |
+| -------------- | ------------------------- |
+| Runtime        | Node.js                   |
+| Framework      | Express.js                |
+| Database       | MongoDB (Mongoose)        |
+| Authentication | JWT (JSON Web Tokens)     |
+| Authorization  | Role-Based Access Control |
+| Deployment     | Render                    |
+
+---
 
 ## 👤 Roles & Permissions
 
@@ -23,11 +47,41 @@ A backend system for managing financial transactions with role-based access cont
 
 ## 🔐 Authentication
 
-* JWT-based authentication
-* Token required in Authorization header:
+- JWT-based authentication
+- Token required in Authorization header for all protected routes:
 
 ```
 Authorization: Bearer <token>
+```
+
+---
+
+## 📁 Project Structure
+
+```
+Finance-backend/
+├── src/
+│   ├── config/
+│   │   └── db.js               # MongoDB connection
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── userController.js
+│   │   ├── transactionController.js
+│   │   └── dashboardController.js
+│   ├── middleware/
+│   │   ├── auth.js             # JWT verification
+│   │   └── roleCheck.js        # RBAC enforcement
+│   ├── models/
+│   │   ├── User.js
+│   │   └── Transaction.js
+│   └── routes/
+│       ├── auth.js
+│       ├── users.js
+│       ├── transactions.js
+│       └── dashboard.js
+├── server.js
+├── package.json
+└── .env
 ```
 
 ---
@@ -36,72 +90,94 @@ Authorization: Bearer <token>
 
 ### Auth
 
-* POST /api/auth/register
-* POST /api/auth/login
+| Method | Endpoint           | Access |
+| ------ | ------------------ | ------ |
+| POST   | /api/auth/register | Public |
+| POST   | /api/auth/login    | Public |
 
-### Users (Admin only)
+### Users
 
-* GET /api/users
-* PATCH /api/users/:id/role
-* PATCH /api/users/:id/status
+| Method | Endpoint              | Access     |
+| ------ | --------------------- | ---------- |
+| GET    | /api/users            | Admin only |
+| PATCH  | /api/users/:id/role   | Admin only |
+| PATCH  | /api/users/:id/status | Admin only |
 
 ### Transactions
 
-* POST /api/transactions
-* GET /api/transactions
-* PUT /api/transactions/:id
-* DELETE /api/transactions/:id
+| Method | Endpoint              | Access         |
+| ------ | --------------------- | -------------- |
+| POST   | /api/transactions     | Admin, Analyst |
+| GET    | /api/transactions     | All roles      |
+| PUT    | /api/transactions/:id | Admin, Analyst |
+| DELETE | /api/transactions/:id | Admin only     |
 
 ### Dashboard
 
-* GET /api/dashboard/summary
-* GET /api/dashboard/category
+| Method | Endpoint                | Access    |
+| ------ | ----------------------- | --------- |
+| GET    | /api/dashboard/summary  | All roles |
+| GET    | /api/dashboard/category | All roles |
 
 ---
 
 ## 📊 Features
 
-* Role-based access control
-* Data isolation per user
-* Admin-level global data visibility
-* Transaction filtering
-* Aggregated analytics using MongoDB
+- Role-based access control with 3 permission tiers
+- Per-user data isolation (users see only their own data)
+- Admin-level global data visibility across all users
+- Transaction filtering by category and date
+- Aggregated analytics powered by MongoDB aggregation pipelines
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Local Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/nithin-code-web/Finance-backend.git
+cd Finance-backend
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-Create `.env` file:
+### 3. Configure environment variables
 
-```
+Create a `.env` file in the root directory:
+
+```env
 PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
 ```
 
-Run server:
+### 4. Start the development server
 
 ```bash
 npm run dev
 ```
 
----
-
-## 📌 Assumptions
-
-* JWT used for authentication
-* Admin has full access
-* Other users restricted to their own data
+The API will be available at `http://localhost:5000`.
 
 ---
 
 ## 💡 Future Improvements
 
-* Pagination
-* Rate limiting
-* Advanced analytics
-* Unit testing
+- Pagination for transaction listings
+- Rate limiting to prevent API abuse
+- Advanced analytics (monthly trends, top categories)
+- Unit and integration testing (Jest + Supertest)
+- Swagger/OpenAPI documentation
+
+---
+
+## 👤 Author
+
+**Nithin Budime**  
+Backend Developer | Full Stack Development Learner  
+[GitHub](https://github.com/nithin-code-web)
