@@ -11,7 +11,11 @@ exports.updateUserRole = async (id, role) => {
     { new: true }
   );
 
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    const err = new Error("User not found");
+    err.statusCode = 404;
+    throw err;
+  }
 
   return user;
 };
@@ -23,7 +27,11 @@ exports.updateUserStatus = async (id, status) => {
     { new: true }
   );
 
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    const err = new Error("User not found");
+    err.statusCode = 404;
+    throw err;
+  }
 
   return user;
 };

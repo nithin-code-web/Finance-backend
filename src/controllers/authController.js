@@ -32,12 +32,14 @@ exports.register = async (req, res, next) => {
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "All fields required" });
+      const err = new Error("All fields required");
+      err.statusCode = 400;
+      throw err;
     }
 
     const result = await authService.loginUser({ email, password });
@@ -48,6 +50,6 @@ exports.login = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(401).json({ message: err.message });
+    next(err);
   }
 };

@@ -80,7 +80,9 @@ exports.updateTransaction = async (id, updates) => {
   );
 
   if (!transaction) {
-    throw new Error("Transaction not found");
+    const err = new Error("Transaction not found");
+    err.statusCode = 404;
+    throw err;
   }
 
   return transaction;
@@ -91,7 +93,9 @@ exports.deleteTransaction = async (id) => {
   const transaction = await Transaction.findByIdAndDelete(id);
 
   if (!transaction) {
-    throw new Error("Transaction not found");
+    const err = new Error("Transaction not found");
+    err.statusCode = 404;
+    throw err;
   }
 
   return transaction;

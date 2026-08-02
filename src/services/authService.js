@@ -31,14 +31,24 @@ exports.registerUser = async ({ name, email, password, role }) => {
 exports.loginUser = async ({ email, password }) => {
 
   const user = await User.findOne({ email });
-  if (!user) throw new Error("User not found");
+  if (!user) {
+    const err = new Error("User not found");
+    err.statusCode = 404;
+    throw err;
+  }
 
   if (user.status === "inactive") {
-    throw new Error("Account inactive");
+    const err = new Error("Account inactive");
+    err.statusCode = 400;
+    throw err;
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) throw new Error("Invalid credentials");
+  if (!isMatch) {
+    const err = new Error("Invalid credentials");
+    err.statusCode = 401;
+    throw err;
+  }
 
   const token = jwt.sign(
     { id: user._id, role: user.role },

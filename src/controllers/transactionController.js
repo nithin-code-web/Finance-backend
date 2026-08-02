@@ -1,14 +1,14 @@
 const transactionService = require("../services/transactionService");
 
 // Create a new transaction
-exports.createTransaction = async (req, res) => {
+exports.createTransaction = async (req, res, next) => {
   try {
     const { amount, type, category, date, notes } = req.body;
 
     if (!amount || !type || !category) {
-      return res.status(400).json({
-        message: "Amount, type, and category are required"
-      });
+      const err = new Error("Amount, type, and category are required");
+      err.statusCode = 400;
+      throw err;
     }
 
     const transaction = await transactionService.createTransaction({
@@ -26,14 +26,12 @@ exports.createTransaction = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
 // Get transactions with filters
-exports.getTransactions = async (req, res) => {
+exports.getTransactions = async (req, res, next) => {
   try {
     const filters = {
       type: req.query.type,
@@ -54,14 +52,12 @@ exports.getTransactions = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
 // Dashboard summary
-exports.getSummary = async (req, res) => {
+exports.getSummary = async (req, res, next) => {
   try {
     const summary = await transactionService.getSummary(
       req.user.id,
@@ -74,14 +70,12 @@ exports.getSummary = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
 // Update transaction (admin only)
-exports.updateTransaction = async (req, res) => {
+exports.updateTransaction = async (req, res, next) => {
   try {
     const transaction = await transactionService.updateTransaction(
       req.params.id,
@@ -94,15 +88,13 @@ exports.updateTransaction = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(404).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
 
 // Delete transaction (admin only)
-exports.deleteTransaction = async (req, res) => {
+exports.deleteTransaction = async (req, res, next) => {
   try {
     await transactionService.deleteTransaction(req.params.id);
 
@@ -111,14 +103,12 @@ exports.deleteTransaction = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(404).json({
-      message: err.message
-    });
+    next(err);
   }
 };
 
 //` Category summary for dashboard  
-exports.getCategorySummary = async (req, res) => {
+exports.getCategorySummary = async (req, res, next) => {
   try {
     const data = await transactionService.getCategorySummary(
       req.user.id,
@@ -131,8 +121,6 @@ exports.getCategorySummary = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({
-      message: err.message
-    });
+    next(err);
   }
 };

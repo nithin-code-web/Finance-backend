@@ -1,6 +1,6 @@
 const userService = require("../services/userService");
 
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res, next) => {
   try {
     const users = await userService.getAllUsers();
 
@@ -9,11 +9,11 @@ exports.getUsers = async (req, res) => {
       data: users
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };
 
-exports.updateRole = async (req, res) => {
+exports.updateRole = async (req, res, next) => {
   try {
     const { role } = req.body;
 
@@ -27,11 +27,11 @@ exports.updateRole = async (req, res) => {
       data: user
     });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-exports.updateStatus = async (req, res) => {
+exports.updateStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
 
@@ -45,6 +45,6 @@ exports.updateStatus = async (req, res) => {
       data: user
     });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
