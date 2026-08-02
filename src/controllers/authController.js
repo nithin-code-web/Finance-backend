@@ -1,11 +1,18 @@
 const authService = require("../services/authService");
 
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
   try {
+    if (!req.body) {
+      const err = new Error("Request body is missing");
+      err.statusCode = 400;
+      throw err;
+      }
     const { name, email, password, role } = req.body;
 
     if ( !email || !password || !name) {
-      return res.status(400).json({ message: "All fields required" });
+      const err = new Error("All fields required");
+      err.statusCode = 400;
+      throw err;
     }
 
     const result = await authService.registerUser({
@@ -21,7 +28,7 @@ exports.register = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
